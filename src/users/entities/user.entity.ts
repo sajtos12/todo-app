@@ -1,30 +1,21 @@
-/* import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-
-export type UserDocument = HydratedDocument<User>;
-@Schema()
-export class User {
-  @Prop({ type: Number, auto: true })
-  id: number;
-
-  @Prop({ type: String, required: true })
-  username: string;
-
-  @Prop({ type: String, required: true })
-  password: string;
-}
-
-export const UserSchema = SchemaFactory.createForClass(User); */
-
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class User {
-  @ObjectIdColumn()
-  id: ObjectID;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   username: string;
 
   @Column({ default: false })
-  password: boolean;
+  password: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(
+      this.password,
+      parseInt(process.env.SALT_ROUNDS),
+    );
+  }
 }
