@@ -11,31 +11,31 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  create(createUserDto: CreateUserDto): Promise<User> {
     const { username, password } = createUserDto;
     const user = this.usersRepository.create({ username, password });
     return this.usersRepository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
+  findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  findOne(id: number): Promise<User> {
     return this.usersRepository.findOne({ where: { id } });
   }
-  async findOneByUserName(username: string): Promise<User> {
+  findOneByUserName(username: string): Promise<User> {
     return this.usersRepository.findOne({ where: { username } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersRepository.update(
       { id },
       { username: updateUserDto.username, password: updateUserDto.password },
     );
   }
 
-  async remove(id: number) {
+  remove(id: number) {
     return this.usersRepository.delete({ id });
   }
 }
